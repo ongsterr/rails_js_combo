@@ -1,24 +1,43 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Setting up guide:
 
-Things you may want to cover:
+Create new rails app in API mode
+```
+$ rails new bookshelf --api
+```
 
-* Ruby version
+Create "Book" scaffold
+```
+$ rails g scaffold Book title description:text isbn
+```
 
-* System dependencies
+Migrate and seed database (create some books with title, description and isbn to be seeded)
+```
+$ rails db:migrate
+$ rails db:seed
+```
+Create a file `test/http/book.http` folder and input below code mainly to test use **REST Client**
+```
+@uri = http://localhost:3000
 
-* Configuration
 
-* Database creation
+###
+# Get all books
+GET {{uri}}/books
 
-* Database initialization
+###
+# Get 1 book 
+GET {{uri}}/books/3
 
-* How to run the test suite
+###
+# Add a book
+POST {{uri}}/books
+Content-Type: application/json
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+{
+    "title": "Hello JS",
+    "description": "Everything about JavaScript you need to know",
+    "isbn": "0724681012"
+}
+```
