@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script defer src="index.js"></script>
+    
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+    <title>BookShelf</title>
+</head>
+<body>
+    <style>
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+    </style>
+
+    <main class="container">
+
+        <h1>BookShelf</h1>
+
+        <div class="row">
+            <h4>Add a Book</h4>
+            <div class="row">
+                <form action="/books", class="col s12">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <label for="title">Title*</label>
+                            <input type="text" name="title" id="title">
+                        </div>
+                        <div class="input-field col s6">
+                            <label for="isbn">ISBN*</label>
+                            <input type="text" name="isbn" id="isbn">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea name="description" id="description" class="materialize-textarea"></textarea>
+                            <label for="description">Description*</label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                        <i class="material-icons right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Collection List of Books -->
+        
+        <div class="row">
+            <h4>Current Book List</h4>
+            <ul class="collection">
+                
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

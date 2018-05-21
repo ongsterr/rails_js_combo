@@ -1,0 +1,21 @@
+@uri = http://localhost:3000
+
+
+###
+# Get all books
+GET {{uri}}/books
+
+###
+# Get 1 book 
+GET {{uri}}/books/3
+
+###
+# Add a book
+POST {{uri}}/books
+Content-Type: application/json
+
+{
+    "title": "Hello JS",
+    "description": "Everything about JavaScript you need to know",
+    "isbn": "0724681012"
+}
