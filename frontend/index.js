@@ -1,61 +1,37 @@
-/* From Materialise CSS
-<li class="collection-item avatar">
-    <img src="images/yuna.jpg" alt="" class="circle">
-    <span class="title">Title</span>
-    <p>Description
-        <br> ISBN
-    </p>
-    <a href="#!" class="secondary-content">
-        <i class="material-icons"></i>
-    </a>
-</li>
-*/
 
-/* Method #1
+// 3. add a submit event listener to form
+// 4. submitBook or submitForm (tip: reset form if successful)
+// 5. postBook async function
+// 6. prepend new book to bookList
+// Another tip: don’t submit data if any form field is empty
+
 const uri = 'http://localhost:3000'
-const request = await fetch(uri + '/books')
+const booksCollection = document.querySelector('.collection')
+const form = document.querySelector('form')
 
-console.log(request) // "books" is a promise fetched
+form.addEventListener('submit', submitBook, false)
+booksCollection.addEventListener('click', deleteBook)
 
-request
-.then(res => {
-    // console.log(res)
-    // console.log(res.body)
-    return res.json()
-})
-.then(books => {
-    // console.log(books)
-    for(i=0; i<books.length; i++) {
-        createBookItem(books[i])
-    }
-})
-*/
-
-const books_collection = document.querySelector('.collection')
-
-// Method #2: async function use promises (new to ES6)
-const uri = 'http://localhost:3000'
+fetchBooks()
+    .then(addBookToList)
+    .catch(error => console.log(error.message))
 
 async function fetchBooks() {
     // What does "await" do? It waits for asynchronous function to run before moving to the next code
     const response = await fetch(uri + '/books')
     const books = response.json()
+    console.log(books)
     return books
 }
 
-fetchBooks()
-    .then(addBookToList)
-    .catch(err => console.log(err.message))
-
 function addBookToList(books) {
     for (i = 0; i < books.length; i++) {
-        createBookItem(books[i])
+        const newBooks = books.concat().reverse()[i] // Reverse arrangement to show latest book added first
+        createBookItem(newBooks)
     }
 }
 
-// function createBookItem({id, title, description:desc, isbn}) // JS destructuring
-
-function createBookItem(book) {
+function createBookItem({ id, title, description, isbn }) {
     // Create an li
     // Add a "collection-item" class to the li
     // Create a p tag, with title and append to li
@@ -66,67 +42,64 @@ function createBookItem(book) {
     let li = document.createElement('li')
     li.classList.add('collection-item')
     li.classList.add('avatar')
-    li.dataset.id = book.id
+    li.dataset.id = id
 
     let thumb = document.createElement('IMG')
     thumb.classList.add('circle')
     thumb.src = 'https://media.bloomsbury.com/rep/bj/9781408805725.jpg'
-    // thumb.width = '100'
     li.appendChild(thumb)
 
     let title = document.createElement('span')
     thumb.classList.add('title')
-    title.textContent = book.title
+    title.textContent = title
     title.style = "font-weight: 600"
     li.appendChild(title)
 
-    let description = document.createElement('p')
-    description.textContent = `Description: "${book.description}"`
-    description.style = "text-indent: 10px"
-    li.appendChild(description)
+    let desc = document.createElement('p')
+    desc.textContent = `Description: "${description}"`
+    desc.style = "text-indent: 10px"
+    li.appendChild(desc)
 
     let isbn = document.createElement('p')
-    isbn.textContent = `ISBN: ${book.isbn}`
+    isbn.textContent = `ISBN: ${isbn}`
     isbn.style = "text-indent: 10px"
     li.appendChild(isbn)
 
-    books_collection.appendChild(li)
+    let button = document.createElement('button')
+    button.textContent = 'Delete Book'
+    button.classList.add('btn-flat')
+    li.appendChild(button)
+
+    booksCollection.appendChild(li)
 }
-
-// 3. add a submit event listener to form 
-// 4. submitBook or submitForm (tip: reset form if successful)
-// 5. postBook async function
-// 6. prepend new book to bookList
-// Another tip: don’t submit data if any form field is empty
-
-const form = document.querySelector('form')
-const event = form.addEventListener('submit', submitBook)
 
 function submitBook(e) {
     e.preventDefault()
-    const title = e.target.title.value
-    const description = e.target.description.value
-    const isbn = e.target.isbn.value
+    const form = e.target
+    const title = form.title.value
+    const description = form.description.value
+    const isbn = form.isbn.value
     const book = {
-        title: title,
-        description: description,
-        isbn: isbn
+        title, description, isbn
     }
-
+    
     if(validateForm()) {
         postBook(book)
-            .then(
-                alert('Form submitted'),
-                form.reset(),
-                books_collection.prepend(createBookItem(book)),
-                console.log(book)
-            )
-            .catch(err => console.log(err.message))
+            .then(book => {
+                return createBookItem(book),
+                console.log(book),
+                form.reset()
+            })
+            .then(list => {
+                addBookToList(list),
+                alert('Form submitted')
+            })
+            .catch(error => console.log('Error:', error.message))
+            .then(response => console.log('Success:', response))
     }
 }
 
 async function postBook(book) {
-    const url = 'http://localhost:3000/books'
     const options = {
         method: 'POST',
         headers: {
@@ -134,9 +107,9 @@ async function postBook(book) {
         },
         body: JSON.stringify(book)
     }
-    const responsePost = await fetch(url, options) //promise, async
-    const bookJson = await responsePost.json()
-    return bookJson
+    const response = await fetch(uri + '/books', options) //promise, async
+    const newBook = response.json()
+    return newBook
 }
 
 function validateForm() {
@@ -158,4 +131,27 @@ function validateForm() {
         return false
     }
     return true;
+}
+
+// Add a delete button for each book
+
+function deleteBook(e) {
+    if(e.target.tagName === 'BUTTON') {
+        const li = e.target.parentNode
+        const {id} = li.dataset
+        deleteRecord(id)
+            .then(bookID => {
+                booksCollection.removeChild(li)
+            })
+            .catch(error => console.log(error))
+    }
+}
+
+async function deleteRecord(bookID) {
+    const url = `http://localhost:3000/books/${bookID}`
+    const options = {
+        method: 'DELETE'
+    }
+    await fetch(url, options)
+    return bookID
 }
