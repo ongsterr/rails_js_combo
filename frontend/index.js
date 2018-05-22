@@ -53,7 +53,7 @@ function addBookToList(books) {
     }
 }
 
-// function createBookItem({id, title, description:desc, isbn})
+// function createBookItem({id, title, description:desc, isbn}) // JS destructuring
 
 function createBookItem(book) {
     // Create an li
