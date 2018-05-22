@@ -26,12 +26,12 @@ async function fetchBooks() {
 
 function addBookToList(books) {
     for (i = 0; i < books.length; i++) {
-        const newBooks = books.concat().reverse()[i] // Reverse arrangement to show latest book added first
-        createBookItem(newBooks)
+        // const newBooks = books.concat().reverse()[i] // Reverse arrangement to show latest book added first
+        createBookItem(books)
     }
 }
 
-function createBookItem({ id, title, description, isbn }) {
+function createBookItem(book) {
     // Create an li
     // Add a "collection-item" class to the li
     // Create a p tag, with title and append to li
@@ -42,7 +42,7 @@ function createBookItem({ id, title, description, isbn }) {
     let li = document.createElement('li')
     li.classList.add('collection-item')
     li.classList.add('avatar')
-    li.dataset.id = id
+    li.dataset.id = book.id
 
     let thumb = document.createElement('IMG')
     thumb.classList.add('circle')
@@ -50,18 +50,18 @@ function createBookItem({ id, title, description, isbn }) {
     li.appendChild(thumb)
 
     let title = document.createElement('span')
-    thumb.classList.add('title')
-    title.textContent = title
+    title.classList.add('title')
+    title.textContent = book.title
     title.style = "font-weight: 600"
     li.appendChild(title)
 
     let desc = document.createElement('p')
-    desc.textContent = `Description: "${description}"`
+    desc.textContent = `Description: "${book.description}"`
     desc.style = "text-indent: 10px"
     li.appendChild(desc)
 
     let isbn = document.createElement('p')
-    isbn.textContent = `ISBN: ${isbn}`
+    isbn.textContent = `ISBN: ${book.isbn}`
     isbn.style = "text-indent: 10px"
     li.appendChild(isbn)
 
