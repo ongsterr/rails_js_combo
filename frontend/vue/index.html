@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script defer src="js/index.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"></script> -->
+    <script src="js/vue.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <title>Building Bookshelf using Vue</title>
+</head>
+<body>
+    <main id="app" class="container">
+        <h2>My Bookshelf</h2>
+        <loader :books="books">
+            <div class="row">
+                <book-card v-if="books.length > 0" :book="book" :delete-book="deleteBook" ></book-card> <!-- Originally, books array was empty -->
+            </div>
+            <books-list :books="books" :delete-book="deleteBook"></books-list>
+        </loader>
+    </main>
+</body>
+</html>
